@@ -21,13 +21,15 @@ A class which inherits from `YamlAttributes` simply has to list the desired conf
 | `yaml_file_path` | `'./'`     | Sets the path to the YAML file which should be loaded.           |
 | `yaml_section`   | `'config'` | Sets YAML section which contains the desired config fields.      |
 
-### init method
+### init Method
 
 | Args           | values                    | Description                                                      |
 |----------------|---------------------------|------------------------------------------------------------------|
-| `mode`         | `'sync'`, `'soft_config'` | Selects the the mode of how the YAML values should update the config class. The `sync` mode keeps the YAML file and the config class in sync. Each attribute in the config class (except of the two special ones) have to be in the YAML file and vis versa. The `soft_config` mode allows the YAML file to have additional fields which the config class does not have. |
+| `mode`         | `'sync'`, `'soft_config'` | Selects the the mode of how the YAML values should update the config class. The `sync` mode keeps the YAML file and the config class in sync. Each attribute in the config class (except of the two special ones and optiona attributes) have to be in the YAML file and vis versa. The `soft_config` mode allows the YAML file to have additional fields which the config class does not have. |
 
+### Optional Attributes
 
+By default the YAML file has to provide values for all attributes of the config file. By using the `Optional` type hint optional attributes can be added to a config class. For these optional attributes the YAML file is not required to provide values.
 
 ## Example
 
@@ -41,6 +43,7 @@ class MyConfig(YamlAttributes):
     batch_size: int
     num_classes: int
     optimizer: str
+    device: Optional[str]
 ```
 
 Make ure the YAML file exists and has all entries the config class `MyConfig` needs.

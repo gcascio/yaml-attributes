@@ -1,4 +1,5 @@
 import inspect
+from typing import Optional, Union, get_origin, get_args
 import yaml
 from abc import ABC
 
@@ -47,12 +48,20 @@ class YamlAttributes(ABC):
 
     @classmethod
     def __set_attributes(cls, config: dict, attributes: dict, mode):
-        req_attributes = attributes.keys()
+        req_attributes = [
+            k
+            for k, v in attributes.items()
+            if not cls.__is_optional(v)
+        ]
 
         modes = {
             # The YAML config and the required class attributes have to match
-            # exactly
-            'sync': lambda: set(config.keys()) == set(req_attributes),
+            # exactly while the YAML config can only have entries which are
+            # also in the config class
+            'sync': lambda: (
+                all(k in config for k in req_attributes)
+                and all(k in attributes for k in config.keys())
+            ),
             # The YAML config has to have at least all class attributes
             # while additional entries are omitted
             'soft_config': lambda: all(k in config for k in req_attributes)
@@ -63,19 +72,27 @@ class YamlAttributes(ABC):
         ), 'YAML config and/or class attributes do not fulfill the '\
             'requirements of the "{}" mode'.format(mode)
 
-        for key, value in config.items():
-            if key not in req_attributes:
-                return
-
+        for key, attribute_type in attributes.items():
+            value = config[key] if key in config.keys() else None
             config_type = type(value)
-            attribute_type = attributes[key]
+            attribute_is_union = get_origin(attribute_type) is Union
 
-            if not isinstance(attribute_type, type):
+            if not (
+                isinstance(attribute_type, type)
+                or attribute_is_union
+            ):
                 attribute_type = type(attributes[key])
 
             assert (
                 config_type == attribute_type
+                or (
+                    attribute_is_union
+                    and config_type in get_args(attributes[key])
+                )
             ), 'Type missmatch between YAML file and config '\
-                'class was found for the "{}" attribute'.format(key)
+                'class was found for the "{}" attribute.'.format(key)
 
             setattr(cls, key, value)
+
+    def __is_optional(field):
+        return get_origin(field) is Union and type(None) in get_args(field)
