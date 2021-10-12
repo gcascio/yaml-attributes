@@ -1,5 +1,5 @@
 import inspect
-from typing import Optional, Union, get_origin, get_args
+from typing import Union, get_origin, get_args
 import yaml
 from abc import ABC
 
