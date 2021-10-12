@@ -4,7 +4,7 @@ from abc import ABC
 
 
 class YamlAttributes(ABC):
-    yaml_file_path: str = './'
+    yaml_file_path: str = './yaml-attribute-config.yaml'
     yaml_section: str = 'config'
 
     @classmethod
@@ -43,25 +43,39 @@ class YamlAttributes(ABC):
             )
         }
 
-        return filtered_members.keys()
+        return filtered_members
 
     @classmethod
-    def __set_attributes(cls, config: dict, attributes: list, mode):
+    def __set_attributes(cls, config: dict, attributes: dict, mode):
+        req_attributes = attributes.keys()
+
         modes = {
-            # The YAML config and the class attributes have to match exactly
-            'sync': lambda: set(config.keys()) == set(attributes),
+            # The YAML config and the required class attributes have to match
+            # exactly
+            'sync': lambda: set(config.keys()) == set(req_attributes),
             # The YAML config has to have at least all class attributes
             # while additional entries are omitted
-            'soft_config': lambda: all(k in config for k in attributes)
+            'soft_config': lambda: all(k in config for k in req_attributes)
         }
 
         assert (
             modes[mode]()
-        ), 'YAML config and/or class attributes do not fulfill the'\
+        ), 'YAML config and/or class attributes do not fulfill the '\
             'requirements of the "{}" mode'.format(mode)
 
         for key, value in config.items():
-            if key not in attributes:
+            if key not in req_attributes:
                 return
+
+            config_type = type(value)
+            attribute_type = attributes[key]
+
+            if not isinstance(attribute_type, type):
+                attribute_type = type(attributes[key])
+
+            assert (
+                config_type == attribute_type
+            ), 'Type missmatch between YAML file and config '\
+                'class was found for the "{}" attribute'.format(key)
 
             setattr(cls, key, value)
