@@ -9,8 +9,12 @@ class YamlAttributes(ABC):
     yaml_section: str = 'config'
 
     @classmethod
-    def init(cls, mode='sync'):
-        cls.__load_config(cls.yaml_file_path, cls.yaml_section, mode)
+    def init(cls, mode='sync', yaml_file_path=None, yaml_section=None):
+        cls.__load_config(
+            yaml_file_path or cls.yaml_file_path,
+            yaml_section or cls.yaml_section,
+            mode,
+        )
 
     @classmethod
     def to_dict(cls):

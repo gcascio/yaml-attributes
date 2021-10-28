@@ -2,3 +2,8 @@ config:
   test_attribute_a: config_test_value_a
   test_attribute_b: config_test_value_b
   test_attribute_c: 42
+
+another_config:
+  test_attribute_a: another_config_test_value_a
+  test_attribute_b: another_config_test_value_b
+  test_attribute_c: 7
