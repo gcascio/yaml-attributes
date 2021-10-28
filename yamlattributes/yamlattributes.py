@@ -13,6 +13,17 @@ class YamlAttributes(ABC):
         cls.__load_config(cls.yaml_file_path, cls.yaml_section, mode)
 
     @classmethod
+    def to_dict(cls):
+        return {
+            k: v
+            for k, v in vars(cls).items()
+            if not (
+                k.startswith('_')
+                or inspect.ismethod(k)
+            )
+        }
+
+    @classmethod
     def __load_config(cls, yam_file_path: str, yaml_section, mode):
         attributes = cls.__get_attributes()
 

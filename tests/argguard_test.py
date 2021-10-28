@@ -193,3 +193,31 @@ def test_config_successfully_assighns_optional_values():
         and TestConfig.test_attribute_b == 'config_test_value_b'
         and TestConfig.test_attribute_c == 42
     ), 'Config values are not correctly assigned to config class'
+
+
+def test_config_successfully_converts_to_dict():
+    YamlAttributes.__abstractmethods__ = set()
+
+    # Arrange
+    class TestConfig(YamlAttributes):
+        yaml_file_path = './tests/test_config.yaml'
+        test_attribute_a: str
+        test_attribute_b = 'test_value_b'
+        test_attribute_c: int
+
+    test_config_dict = {
+        'yaml_file_path': './tests/test_config.yaml',
+        'test_attribute_a': 'config_test_value_a',
+        'test_attribute_b': 'config_test_value_b',
+        'test_attribute_c': 42,
+    }
+
+    # print(TestConfig.to_dict())
+
+    # Act
+    TestConfig.init()
+
+    # Assert
+    assert (
+        test_config_dict == TestConfig.to_dict()
+    ), 'Config class was not correctly converted to a dict'
