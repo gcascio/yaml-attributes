@@ -21,7 +21,13 @@ A class which inherits from `YamlAttributes` simply has to list the desired conf
 | `yaml_file_path` | `'./'`     | Sets the path to the YAML file which should be loaded.           |
 | `yaml_section`   | `'config'` | Sets YAML section which contains the desired config fields.      |
 
-### init Method
+### Optional Attributes
+
+By default the YAML file has to provide values for all attributes of the config file. By using the `Optional` type hint optional attributes can be added to a config class. For these optional attributes the YAML file is not required to provide values.
+
+### Methods
+
+#### `init`
 
 | Args           | values                    | Description                                                      |
 |----------------|---------------------------|------------------------------------------------------------------|
@@ -29,13 +35,10 @@ A class which inherits from `YamlAttributes` simply has to list the desired conf
 | `yaml_file_path`| `str`                    | Instead of providing the path to the YAML file through the special attribute it can also be passed in the init method. The path passed to the init method overrides the special attribute |
 | `yaml_section`| `str`                    | Instead of providing the YAML section through the special attribute it can also be passed in the init method. The section passed to the init method overrides the special attribute |
 
-### to_dict Method
+#### `to_dict`
 
 The config object can be converted to a dictionary by calling the `to_dict` method
 
-### Optional Attributes
-
-By default the YAML file has to provide values for all attributes of the config file. By using the `Optional` type hint optional attributes can be added to a config class. For these optional attributes the YAML file is not required to provide values.
 
 ## :rocket: Example
 
@@ -87,7 +90,7 @@ To fix a bug or add a feature, follow these steps:
 - Add your changes and new tests if necessary
 - Make sure all tests pass
 - Commit your changes (`git commit -am 'feat: fantastic feature'`)
-- Push the branch (`git push origin improve-feature`)
+- Push the branch (`git push origin your-branch`)
 - Create a [Pull Request](https://docs.github.com/en/get-started/quickstart/contributing-to-projects#forking-a-repository)
 
 ### Developing
