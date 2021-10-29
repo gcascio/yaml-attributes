@@ -1,15 +1,24 @@
 import inspect
-from typing import Union, get_origin, get_args
 import yaml
-from abc import ABC
+
+from typing import Union, get_origin, get_args
+from .attribute_interceptor import AttributeInterceptor
 
 
-class YamlAttributes(ABC):
+class YamlAttributes(metaclass=AttributeInterceptor):
     yaml_file_path: str = './yaml-attribute-config.yaml'
     yaml_section: str = 'config'
 
     @classmethod
-    def init(cls, mode='sync', yaml_file_path=None, yaml_section=None):
+    def init(
+        cls,
+        mode='sync',
+        yaml_file_path=None,
+        yaml_section=None,
+        retrieval_mode=None,
+    ):
+        setattr(cls, '__retrieval_mode', retrieval_mode)
+
         cls.__load_config(
             yaml_file_path or cls.yaml_file_path,
             yaml_section or cls.yaml_section,

@@ -9,8 +9,8 @@ YamlAttributes can be installed by running `pip install yamlattributes`
 
 ## :technologist: Usage
 
-The abstract `YamlAttributes` class provides the `init` method which loads a YAML file and assigns its values to the corresponding class attributes.
-A class which inherits from `YamlAttributes` simply has to list the desired configuration as class attributes and two additional special attributes `yaml_file_path` and `yaml_section`. After calling the `init` method the all class attributes wil be assigned the values of the corresponding fields of the YAML file.
+The `YamlAttributes` class provides the `init` method which loads a YAML file and assigns its values to the corresponding class attributes.
+A class which inherits from `YamlAttributes` simply has to list the desired configuration as class attributes and optionally two additional special attributes `yaml_file_path` and `yaml_section`. After calling the `init` method all class attributes will be assigned with the values of the corresponding fields in the YAML file.
 
 ## :monocle_face: API
 
@@ -18,7 +18,7 @@ A class which inherits from `YamlAttributes` simply has to list the desired conf
 
 | Attribute        | Default    | Description                                                      |
 |------------------|------------|------------------------------------------------------------------|
-| `yaml_file_path` | `'./'`     | Sets the path to the YAML file which should be loaded.           |
+| `yaml_file_path` | `'./yaml-attribute-config.yaml'`     | Sets the path to the YAML file which should be loaded.           |
 | `yaml_section`   | `'config'` | Sets YAML section which contains the desired config fields.      |
 
 ### Optional Attributes
@@ -29,11 +29,12 @@ By default the YAML file has to provide values for all attributes of the config 
 
 #### `init`
 
-| Args           | values                    | Description                                                      |
+| Args           | values                    | Default | Description                                                      |
 |----------------|---------------------------|------------------------------------------------------------------|
-| `mode`         | `'sync'`, `'soft_config'` | Selects the the mode of how the YAML values should update the config class. The `sync` mode keeps the YAML file and the config class in sync. Each attribute in the config class (except of the two special ones and optiona attributes) have to be in the YAML file and vis versa. The `soft_config` mode allows the YAML file to have additional fields which the config class does not have. |
-| `yaml_file_path`| `str`                    | Instead of providing the path to the YAML file through the special attribute it can also be passed in the init method. The path passed to the init method overrides the special attribute |
-| `yaml_section`| `str`                    | Instead of providing the YAML section through the special attribute it can also be passed in the init method. The section passed to the init method overrides the special attribute |
+| `mode`         | `'sync'`, `'soft_config'` | `'sync'` | Selects the the mode of how the YAML values should update the config class. The `sync` mode keeps the YAML file and the config class in sync. Each attribute in the config class (except of the two special ones and optiona attributes) have to be in the YAML file and vis versa. The `soft_config` mode allows the YAML file to have additional fields which the config class does not have. |
+| `yaml_file_path`| `str`                    | `None` | Instead of providing the path to the YAML file through the special attribute it can also be passed in the init method. The path passed to the init method overrides the special attribute |
+| `yaml_section`| `str`                    | `None` | Instead of providing the YAML section through the special attribute it can also be passed in the init method. The section passed to the init method overrides the special attribute |
+| `retrieval_mode` | `None`, `'safe'` | `None` | By default the config object raises an `AttributeError` when a non existing attribute is accessed. When the `retrieval_mode` is set to `'safe'` a non existing attribute returns `None` instead.
 
 #### `to_dict`
 
@@ -81,7 +82,7 @@ MyConfig.batch_size
 
 ## :hammer_and_wrench:  Contributing
 
-Interested in contributing? Great, thanks for your interest!
+Interested in contributing? Great!
 
 To fix a bug or add a feature, follow these steps:
 

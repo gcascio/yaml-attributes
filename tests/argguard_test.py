@@ -262,3 +262,42 @@ def test_config_loads_successfully_when_config_section_is_passed_to_init():
         and TestConfig.test_attribute_b == 'another_config_test_value_b'
         and TestConfig.test_attribute_c == 7
     ), 'Config values are not correctly assigned to config class'
+
+
+def test_none_existing_attribute_returns_none_in_safe_retrieval_node():
+    YamlAttributes.__abstractmethods__ = set()
+
+    # Arrange
+    class TestConfig(YamlAttributes):
+        yaml_file_path = './tests/test_config.yaml'
+        test_attribute_a: str
+        test_attribute_b = 'test_value_b'
+        test_attribute_c: int
+
+    # Act
+    TestConfig.init(retrieval_mode='safe')
+
+    # Assert
+    assert (
+        TestConfig.non_existing_attribute is None
+    ), 'Config values are not correctly assigned to config class'
+
+
+def test_none_existing_attribute_fails_in_default_retrieval_node():
+    YamlAttributes.__abstractmethods__ = set()
+
+    # Arrange
+    class TestConfig(YamlAttributes):
+        yaml_file_path = './tests/test_config.yaml'
+        test_attribute_a: str
+        test_attribute_b = 'test_value_b'
+        test_attribute_c: int
+
+    # Act
+    TestConfig.init()
+
+    # Assert
+    with pytest.raises(
+        AttributeError,
+    ):
+        TestConfig.non_existing_attribute
